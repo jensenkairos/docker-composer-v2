@@ -1,4 +1,4 @@
-# Docker Composer
+# Docker Composer V2
 
 A library to interact with `docker compose` (Compose V2) from a python Program.
 All commands and parameters are exposed as python classes and attributes
