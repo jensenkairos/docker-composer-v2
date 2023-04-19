@@ -28,7 +28,7 @@ It takes arbitrary strings as input, as well as all keyword arguments from
 
 ```python
 import os
-from docker_composer import DockerCompose
+from docker_composer_v2 import DockerCompose
 
 # set log level and verbose
 os.environ["DOCKER_COMPOSE_LOG_LEVEL"] = "info"
