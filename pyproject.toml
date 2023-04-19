@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "docker-composer-v2"
-version = "0.8.6"
+version = "0.8.7"
 description = "Use `docker compose` from within Python. This is a branch forked from https://github.com/schollm/docker-composer to support Docker Compose V2."
 authors = ["Micha <schollm-git@gmx.com>", "Jensen <jensen@kairosaerospace.com>"]
 readme = "README.md"
