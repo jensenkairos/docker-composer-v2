@@ -1,0 +1,7 @@
+
+.idea/docker-composer-v2.iml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/modules.xml
+.idea/vcs.xml
+dist/docker_composer_v2-0.8.5-py3-none-any.whl
+dist/docker_composer_v2-0.8.5.tar.gz
