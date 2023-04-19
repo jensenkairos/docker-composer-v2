@@ -5,7 +5,8 @@ All commands and parameters are exposed as python classes and attributes
 to allow for full auto-completion of its parameters with IDEs
 that support it. 
 
-This is built on top of the project: https://github.com/schollm/docker-composer
+This project is based off the open source project: https://github.com/schollm/docker-composer
+The main goal for this branch-off effort is to make it work for the latest Docker Compose V2.
 
 
 ## Install
