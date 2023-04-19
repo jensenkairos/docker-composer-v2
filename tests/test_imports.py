@@ -6,7 +6,7 @@ import types
 from pathlib import Path
 from typing import Iterable
 
-import docker_composer
+import docker_composer_v2
 
 
 def get_module_names(package: types.ModuleType) -> Iterable[str]:
@@ -22,10 +22,10 @@ def get_module_names(package: types.ModuleType) -> Iterable[str]:
                 )
 
 
-@pytest.mark.parametrize("import_name", get_module_names(docker_composer))
+@pytest.mark.parametrize("import_name", get_module_names(docker_composer_v2))
 def test_import(import_name: str):
     importlib.import_module(import_name)
 
 
 def test_import_DockerComposer():
-    assert "DockerCompose" in dir(docker_composer)
+    assert "DockerCompose" in dir(docker_composer_v2)

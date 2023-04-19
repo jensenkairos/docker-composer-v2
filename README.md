@@ -15,7 +15,7 @@ pip install docker-composer-v2
 ```
 
 ## Usage
-The main class is `docker_composer.DockerCompose`. Its parameters are
+The main class is `docker_compose_v2r.DockerCompose`. Its parameters are
 all options from `docker compose`.
 
 Each `docker compose` subcommand has a corresponding function, e.g. 

@@ -8,7 +8,7 @@ homepage = "https://github.com/jensenkairos/docker-composer-v2"
 repository = "https://github.com/jensenkairos/docker-composer-v2"
 license = "Apache-2.0"
 packages = [
-    { include = "docker_composer", from = "src" },
+    { include = "docker_composer_v2", from = "src" },
 ]
 classifiers = [
   "Intended Audience :: Developers",

@@ -136,9 +136,11 @@ def get_def_commands(
             f":param {arg.arg}: {arg.description}" for arg in arguments
         )
 
-        class_name = f"docker_composer.runner.cmd.{cmd}.DockerCompose{cmd.capitalize()}"
+        class_name = (
+            f"docker_composer_v2.runner.cmd.{cmd}.DockerCompose{cmd.capitalize()}"
+        )
         new_imports = [
-            f"import docker_composer.runner.cmd.{cmd}",
+            f"import docker_composer_v2.runner.cmd.{cmd}",
         ]
         yield f'''
 def {cmd}(self, {args}) -> {class_name}:
