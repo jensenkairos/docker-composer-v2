@@ -11,7 +11,8 @@ import isort
 from isort.exceptions import ISortError
 from loguru import logger
 
-from docker_composer_v2._utils.argument import Argument, parse_dc_argument
+import argument
+from argument import Argument
 from docker_composer_v2.base import check_v2
 
 
@@ -72,7 +73,7 @@ def collect_help_lines(msg: str) -> Mapping[str, List[str]]:
 def parse_help(msg: str) -> Tuple[Mapping[str, List[str]], List[Argument]]:
     """Helper function, get sections and arguments from docker-compose <cmd> --help text"""
     sections = collect_help_lines(msg)
-    arguments = parse_dc_argument(sections["options"])
+    arguments = argument.parse_dc_argument(sections["options"])
     return sections, arguments
 
 
@@ -162,10 +163,13 @@ def generate_class(class_name: str, cmd: str, level=0) -> str:
     cmd_fns = ""
     add_imports: Set[str] = set()
     if "commands" in sections:
-        logger.info("Found commands in section {}", cmd)
-        for cmd_fn, add_import in get_def_commands(sections):
-            cmd_fns += cmd_fn
-            add_imports = add_imports.union(add_import)
+        try:
+            logger.info("Found commands in section {}", cmd)
+            for cmd_fn, add_import in get_def_commands(sections):
+                cmd_fns += cmd_fn
+                add_imports = add_imports.union(add_import)
+        except:  # catching the exception
+            logger.error("StopIteration error")
     args: List[str] = _flatten(list(type_arg(arg)) for arg in arguments)
 
     # List of argument that are options only

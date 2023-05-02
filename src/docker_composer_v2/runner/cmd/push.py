@@ -19,14 +19,14 @@ class DockerComposePush(DockerBaseRunner):
     """
 
     ignore_push_failures: Optional[bool] = None
-    """Push what it can and ignores images with
-       push failures
-       --include-deps           Also push images of services declared as
-       dependencies"""
+    """Push what it can and ignores images with"""
+    include_deps: Optional[bool] = None
+    """Also push images of services declared as"""
     quiet: Optional[bool] = None
     """Push without printing progress information"""
     _cmd: str = "push"
     _options: List[str] = [
         "ignore_push_failures",
+        "include_deps",
         "quiet",
     ]

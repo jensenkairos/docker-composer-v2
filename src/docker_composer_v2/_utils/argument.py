@@ -53,12 +53,17 @@ class Argument:
         if "  " in line:
             return _from_line_has_sep(line)
 
+        logger.info("line: " + line)
         words = iter(line.split())
         has_more = True
         while has_more:
             arg, default_str, has_more = _parse_arg(next(words))
-        type_desc = next(words)
+
         type_from_default = _get_type_name_from_default(default_str)
+        try:
+            type_desc = next(words)
+        except StopIteration:
+            type_desc = type_from_default
         desc = " ".join(words)
         if type_desc[1:].islower() and "=" not in type_desc:
             desc = f"{type_desc} {desc}"
@@ -72,10 +77,18 @@ def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
     """Combine argument lines to obtain one line per argument"""
     res = ""
     for arg in arguments:
-        if res and arg[:6].strip().startswith("-"):
-            yield res.strip()
+        # logger.info("arg.strip(): ", arg)
+        # if res and arg[:6].strip().startswith("-"):
+        if arg.strip() and len(arg) >= 6 and arg.strip().startswith("-"):
+            yield arg.strip()
             res = ""
-        res += f"\n   {arg.strip()}"
+        else:
+            continue
+        # res += f"\n   {arg.strip()}"
+        # res = f"   {arg.strip()}"
+        # if arg.strip():
+        #     yield arg.strip()
+        #     res = ""
     if res:
         yield res.strip()
 
@@ -87,7 +100,7 @@ def parse_dc_argument(lines: List[str]) -> List[Argument]:
     :return: List of arguments
     """
     iter_lines = _collect_arguments(lines)
-    return [Argument.from_line(line) for line in iter_lines if "--version" not in line]
+    return [Argument.from_line(line) for line in iter_lines if "--version" not in line and "." not in line]
 
 
 def _get_type(type_name) -> Type:

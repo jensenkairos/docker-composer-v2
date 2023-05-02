@@ -22,9 +22,9 @@ class DockerComposeCp(DockerBaseRunner):
     archive: Optional[bool] = None
     """Archive mode (copy all uid/gid information)"""
     follow_link: Optional[bool] = None
-    """Always follow symbol link in SRC_PATH
-       --index int     Index of the container if there are multiple
-       instances of a service ."""
+    """Always follow symbol link in SRC_PATH"""
+    index: Optional[int] = None
+    """Index of the container if there are multiple"""
     _cmd: str = "cp"
     _options: List[str] = [
         "archive",

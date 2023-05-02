@@ -18,9 +18,6 @@ class DockerComposeImages(DockerBaseRunner):
 
     """
 
-    format: Optional[str] = None
-    """Format the output. Values: [table | json].
-       (default "table")"""
     quiet: Optional[bool] = None
     """Only display IDs"""
     _cmd: str = "images"

@@ -18,15 +18,9 @@ class DockerComposePull(DockerBaseRunner):
 
     """
 
-    ignore_buildable: Optional[bool] = None
-    """Ignore images that can be built.
-       --ignore-pull-failures   Pull what it can and ignores images with
-       pull failures.
-       --include-deps           Also pull services declared as dependencies."""
-    quiet: Optional[bool] = None
-    """Pull without printing progress information."""
+    ignore_pull_failures: Optional[bool] = None
+    """Pull what it can and ignores images with"""
     _cmd: str = "pull"
     _options: List[str] = [
-        "ignore_buildable",
-        "quiet",
+        "ignore_pull_failures",
     ]

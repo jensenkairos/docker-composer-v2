@@ -44,26 +44,31 @@ class DockerComposeRoot(DockerBaseRunner):
     """
 
     ansi: Optional[str] = None
-    """Control when to print ANSI control
-       characters ("never"|"always"|"auto")
-       (default "auto")
-       --compatibility              Run compose in backward compatibility mode
-       --env-file stringArray       Specify an alternate environment file."""
+    """Control when to print ANSI control"""
+    compatibility: Optional[bool] = None
+    """Run compose in backward compatibility mode"""
     file: Optional[str] = None
-    """Compose configuration files
-       --parallel int               Control max parallelism, -1 for
-       unlimited (default -1)
-       --profile stringArray        Specify a profile to enable
-       --project-directory string   Specify an alternate working directory
-       (default: the path of the, first
-       specified, Compose file)"""
+    """Compose configuration files"""
+    parallel: Optional[int] = None
+    """Control max parallelism, -1 for"""
+    profile: Optional[str] = None
+    """Specify a profile to enable"""
+    project_directory: Optional[str] = None
+    """Specify an alternate working directory"""
     project_name: Optional[str] = None
     """Project name"""
     _cmd: str = ""
-    _options: List[str] = []
+    _options: List[str] = [
+        "compatibility",
+    ]
 
     def build(
-        self, build_arg: Optional[str] = None, quiet: Optional[bool] = None
+        self,
+        no_cache: Optional[bool] = None,
+        progress: Optional[str] = None,
+        pull: Optional[bool] = None,
+        quiet: Optional[bool] = None,
+        ssh: Optional[str] = None,
     ) -> docker_composer_v2.runner.cmd.build.DockerComposeBuild:
         """
 
@@ -72,17 +77,11 @@ class DockerComposeRoot(DockerBaseRunner):
         Build or rebuild services
 
 
-        :param build_arg: Set build-time variables for services.
-           --no-cache                Do not use cache when building the image
-           --progress string         Set type of progress output (auto, tty,
-           plain, quiet) (default "auto")
-           --pull                    Always attempt to pull a newer version of
-           the image.
-           --push                    Push service images.
+        :param no_cache: Do not use cache when building the image
+        :param progress: Set type of progress output (auto, tty,
+        :param pull: Always attempt to pull a newer version of
         :param quiet: Don't print anything to STDOUT
-           --ssh string              Set SSH authentications used when
-           building service images. (use 'default'
-           for using your default SSH Agent)
+        :param ssh: Set SSH authentications used when
         """
         runner = docker_composer_v2.runner.cmd.build.DockerComposeBuild(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -92,7 +91,7 @@ class DockerComposeRoot(DockerBaseRunner):
 
     def config(
         self,
-        format: Optional[str] = None,
+        no_consistency: Optional[bool] = None,
         output: Optional[str] = None,
         quiet: Optional[bool] = None,
     ) -> docker_composer_v2.runner.cmd.config.DockerComposeConfig:
@@ -103,21 +102,9 @@ class DockerComposeRoot(DockerBaseRunner):
         Parse, resolve and render compose file in canonical format
 
 
-        :param format: Format the output. Values: [yaml | json]
-           (default "yaml")
-           --hash string             Print the service config hash, one per line.
-           --images                  Print the image names, one per line.
-           --no-consistency          Don't check model consistency - warning:
-           may produce invalid Compose output
-           --no-interpolate          Don't interpolate environment variables.
-           --no-normalize            Don't normalize compose model.
+        :param no_consistency: Don't check model consistency - warning:
         :param output: Save to file (default to stdout)
-           --profiles                Print the profile names, one per line.
         :param quiet: Only validate the configuration, don't
-           print anything.
-           --resolve-image-digests   Pin image tags to digests.
-           --services                Print the service names, one per line.
-           --volumes                 Print the volume names, one per line.
         """
         runner = docker_composer_v2.runner.cmd.config.DockerComposeConfig(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -126,7 +113,10 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def cp(
-        self, archive: Optional[bool] = None, follow_link: Optional[bool] = None
+        self,
+        archive: Optional[bool] = None,
+        follow_link: Optional[bool] = None,
+        index: Optional[int] = None,
     ) -> docker_composer_v2.runner.cmd.cp.DockerComposeCp:
         """
 
@@ -138,8 +128,7 @@ class DockerComposeRoot(DockerBaseRunner):
 
         :param archive: Archive mode (copy all uid/gid information)
         :param follow_link: Always follow symbol link in SRC_PATH
-           --index int     Index of the container if there are multiple
-           instances of a service .
+        :param index: Index of the container if there are multiple
         """
         runner = docker_composer_v2.runner.cmd.cp.DockerComposeCp(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -148,7 +137,11 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def create(
-        self, build: Optional[bool] = None
+        self,
+        force_recreate: Optional[bool] = None,
+        no_recreate: Optional[bool] = None,
+        pull: Optional[str] = None,
+        remove_orphans: Optional[bool] = None,
     ) -> docker_composer_v2.runner.cmd.create.DockerComposeCreate:
         """
 
@@ -157,18 +150,10 @@ class DockerComposeRoot(DockerBaseRunner):
         Creates containers for a service.
 
 
-        :param build: Build images before starting containers.
-           --force-recreate   Recreate containers even if their configuration
-           and image haven't changed.
-           --no-build         Don't build an image, even if it's missing.
-           --no-recreate      If containers already exist, don't recreate
-           them. Incompatible with --force-recreate.
-           --pull string      Pull image before running
-           ("always"|"missing"|"never") (default "missing")
-           --remove-orphans   Remove containers for services not defined in
-           the Compose file.
-           --scale scale      Scale SERVICE to NUM instances. Overrides the
-           scale setting in the Compose file if present.
+        :param force_recreate: Recreate containers even if their configuration
+        :param no_recreate: If containers already exist, don't recreate
+        :param pull: Pull image before running
+        :param remove_orphans: Remove containers for services not defined in
         """
         runner = docker_composer_v2.runner.cmd.create.DockerComposeCreate(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -190,14 +175,8 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param remove_orphans: Remove containers for services not defined in
-           the Compose file.
-           --rmi string        Remove images used by services. "local" remove
-           only images that don't have a custom tag
-           ("local"|"all")
         :param timeout: Specify a shutdown timeout in seconds (default 10)
         :param volumes: Remove named volumes declared in the volumes
-           section of the Compose file and anonymous
-           volumes attached to containers.
         """
         runner = docker_composer_v2.runner.cmd.down.DockerComposeDown(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -227,8 +206,7 @@ class DockerComposeRoot(DockerBaseRunner):
         self,
         detach: Optional[bool] = None,
         env: Optional[str] = None,
-        no_TTY: Optional[str] = None,
-        user: Optional[str] = None,
+        index: Optional[int] = None,
         workdir: Optional[str] = None,
     ) -> docker_composer_v2.runner.cmd.exec.DockerComposeExec:
         """
@@ -239,18 +217,9 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param detach: Detached mode: Run command in the
-           background.
         :param env: Set environment variables
-           --index int                    index of the container if there are
-           multiple instances of a service
-           [default: 1]. (default 1)
-        :param no_TTY: Disable pseudo-TTY allocation. By
-           default docker compose exec
-           allocates a TTY. (default true)
-           --privileged                   Give extended privileges to the process.
-        :param user: Run the command as this user.
+        :param index: index of the container if there are
         :param workdir: Path to workdir directory for this
-           command.
         """
         runner = docker_composer_v2.runner.cmd.exec.DockerComposeExec(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -259,7 +228,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def images(
-        self, format: Optional[str] = None, quiet: Optional[bool] = None
+        self, quiet: Optional[bool] = None
     ) -> docker_composer_v2.runner.cmd.images.DockerComposeImages:
         """
 
@@ -268,8 +237,6 @@ class DockerComposeRoot(DockerBaseRunner):
         List images used by the created containers
 
 
-        :param format: Format the output. Values: [table | json].
-           (default "table")
         :param quiet: Only display IDs
         """
         runner = docker_composer_v2.runner.cmd.images.DockerComposeImages(
@@ -279,7 +246,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def kill(
-        self, remove_orphans: Optional[bool] = None, signal: Optional[str] = None
+        self, remove_orphans: Optional[bool] = None
     ) -> docker_composer_v2.runner.cmd.kill.DockerComposeKill:
         """
 
@@ -289,8 +256,6 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param remove_orphans: Remove containers for services not defined in
-           the Compose file.
-        :param signal: SIGNAL to send to the container. (default "SIGKILL")
         """
         runner = docker_composer_v2.runner.cmd.kill.DockerComposeKill(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -299,10 +264,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def logs(
-        self,
-        follow: Optional[bool] = None,
-        tail: Optional[str] = None,
-        timestamps: Optional[bool] = None,
+        self, tail: Optional[str] = None
     ) -> docker_composer_v2.runner.cmd.logs.DockerComposeLogs:
         """
 
@@ -311,18 +273,7 @@ class DockerComposeRoot(DockerBaseRunner):
         View output from containers
 
 
-        :param follow: Follow log output.
-           --no-color        Produce monochrome output.
-           --no-log-prefix   Don't print prefix in logs.
-           --since string    Show logs since timestamp (e.g.
-           2013-01-02T13:23:37Z) or relative (e.g. 42m for
-           42 minutes)
         :param tail: Number of lines to show from the end of the logs
-           for each container. (default "all")
-        :param timestamps: Show timestamps.
-           --until string    Show logs before a timestamp (e.g.
-           2013-01-02T13:23:37Z) or relative (e.g. 42m for
-           42 minutes)
         """
         runner = docker_composer_v2.runner.cmd.logs.DockerComposeLogs(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -331,7 +282,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def ls(
-        self, all: Optional[bool] = None, quiet: Optional[bool] = None
+        self, all: Optional[bool] = None
     ) -> docker_composer_v2.runner.cmd.ls.DockerComposeLs:
         """
 
@@ -341,10 +292,6 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param all: Show all stopped Compose projects
-           --filter filter   Filter output based on conditions provided.
-           --format string   Format the output. Values: [table | json].
-           (default "table")
-        :param quiet: Only display IDs.
         """
         runner = docker_composer_v2.runner.cmd.ls.DockerComposeLs(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -371,7 +318,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def port(
-        self, index: Optional[int] = None
+        self, index: Optional[int] = None, protocol: Optional[str] = None
     ) -> docker_composer_v2.runner.cmd.port.DockerComposePort:
         """
 
@@ -381,8 +328,7 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param index: index of the container if service has multiple
-           replicas (default 1)
-           --protocol string   tcp or udp (default "tcp")
+        :param protocol: tcp or udp (default "tcp")
         """
         runner = docker_composer_v2.runner.cmd.port.DockerComposePort(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -391,7 +337,11 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def ps(
-        self, all: Optional[bool] = None, quiet: Optional[bool] = None
+        self,
+        all: Optional[bool] = None,
+        filter: Optional[str] = None,
+        quiet: Optional[bool] = None,
+        services: Optional[bool] = None,
     ) -> docker_composer_v2.runner.cmd.ps.DockerComposePs:
         """
 
@@ -401,16 +351,9 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param all: Show all stopped containers (including those
-           created by the run command)
-           --filter string        Filter services by a property (supported
-           filters: status).
-           --format string        Format the output. Values: [table | json]
-           (default "table")
+        :param filter: Filter services by a property (supported
         :param quiet: Only display IDs
-           --services             Display services
-           --status stringArray   Filter services by status. Values: [paused |
-           restarting | removing | running | dead |
-           created | exited]
+        :param services: Display services
         """
         runner = docker_composer_v2.runner.cmd.ps.DockerComposePs(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -419,7 +362,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def pull(
-        self, ignore_buildable: Optional[bool] = None, quiet: Optional[bool] = None
+        self, ignore_pull_failures: Optional[bool] = None
     ) -> docker_composer_v2.runner.cmd.pull.DockerComposePull:
         """
 
@@ -428,11 +371,7 @@ class DockerComposeRoot(DockerBaseRunner):
         Pull service images
 
 
-        :param ignore_buildable: Ignore images that can be built.
-           --ignore-pull-failures   Pull what it can and ignores images with
-           pull failures.
-           --include-deps           Also pull services declared as dependencies.
-        :param quiet: Pull without printing progress information.
+        :param ignore_pull_failures: Pull what it can and ignores images with
         """
         runner = docker_composer_v2.runner.cmd.pull.DockerComposePull(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -441,7 +380,10 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def push(
-        self, ignore_push_failures: Optional[bool] = None, quiet: Optional[bool] = None
+        self,
+        ignore_push_failures: Optional[bool] = None,
+        include_deps: Optional[bool] = None,
+        quiet: Optional[bool] = None,
     ) -> docker_composer_v2.runner.cmd.push.DockerComposePush:
         """
 
@@ -451,9 +393,7 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param ignore_push_failures: Push what it can and ignores images with
-           push failures
-           --include-deps           Also push images of services declared as
-           dependencies
+        :param include_deps: Also push images of services declared as
         :param quiet: Push without printing progress information
         """
         runner = docker_composer_v2.runner.cmd.push.DockerComposePush(
@@ -463,7 +403,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def restart(
-        self, no_deps: Optional[bool] = None, timeout: Optional[int] = None
+        self, timeout: Optional[int] = None
     ) -> docker_composer_v2.runner.cmd.restart.DockerComposeRestart:
         """
 
@@ -472,7 +412,6 @@ class DockerComposeRoot(DockerBaseRunner):
         Restart service containers
 
 
-        :param no_deps: Don't restart dependent services.
         :param timeout: Specify a shutdown timeout in seconds (default 10)
         """
         runner = docker_composer_v2.runner.cmd.restart.DockerComposeRestart(
@@ -511,15 +450,17 @@ class DockerComposeRoot(DockerBaseRunner):
 
     def run(
         self,
-        build: Optional[bool] = None,
         detach: Optional[bool] = None,
+        entrypoint: Optional[str] = None,
         env: Optional[str] = None,
-        interactive: Optional[bool] = None,
         label: Optional[str] = None,
+        name: Optional[str] = None,
         no_TTY: Optional[bool] = None,
-        publish: Optional[str] = None,
+        remove_orphans: Optional[bool] = None,
+        rm: Optional[bool] = None,
+        service_ports: Optional[bool] = None,
+        use_aliases: Optional[bool] = None,
         user: Optional[str] = None,
-        volume: Optional[str] = None,
         workdir: Optional[str] = None,
     ) -> docker_composer_v2.runner.cmd.run.DockerComposeRun:
         """
@@ -529,29 +470,17 @@ class DockerComposeRoot(DockerBaseRunner):
         Run a one-off command on a service.
 
 
-        :param build: Build image before starting container.
         :param detach: Run container in background and print
-           container ID
-           --entrypoint string     Override the entrypoint of the image
+        :param entrypoint: Override the entrypoint of the image
         :param env: Set environment variables
-        :param interactive: Keep STDIN open even if not attached.
-           (default true)
         :param label: Add or override a label
-           --name string           Assign a name to the container
+        :param name: Assign a name to the container
         :param no_TTY: Disable pseudo-TTY allocation (default:
-           auto-detected). (default true)
-           --no-deps               Don't start linked services.
-        :param publish: Publish a container's port(s) to the host.
-           --quiet-pull            Pull without printing progress information.
-           --remove-orphans        Remove containers for services not defined
-           in the Compose file.
-           --rm                    Automatically remove the container when it exits
-           --service-ports         Run command with the service's ports
-           enabled and mapped to the host.
-           --use-aliases           Use the service's network useAliases in the
-           network(s) the container connects to.
+        :param remove_orphans: Remove containers for services not defined
+        :param rm: Automatically remove the container when it exits
+        :param service_ports: Run command with the service's ports
+        :param use_aliases: Use the service's network useAliases in the
         :param user: Run as specified username or uid
-        :param volume: Bind mount a volume.
         :param workdir: Working directory inside the container
         """
         runner = docker_composer_v2.runner.cmd.run.DockerComposeRun(
@@ -636,7 +565,16 @@ class DockerComposeRoot(DockerBaseRunner):
         self,
         abort_on_container_exit: Optional[bool] = None,
         detach: Optional[bool] = None,
+        exit_code_from: Optional[str] = None,
+        abort_on_container_exit: Optional[bool] = None,
+        force_recreate: Optional[bool] = None,
+        no_recreate: Optional[bool] = None,
+        no_start: Optional[bool] = None,
+        pull: Optional[str] = None,
+        remove_orphans: Optional[bool] = None,
         renew_anon_volumes: Optional[bool] = None,
+        wait: Optional[bool] = None,
+        wait_timeout: Optional[int] = None,
         waitTimeout: Optional[int] = None,
     ) -> docker_composer_v2.runner.cmd.up.DockerComposeUp:
         """
@@ -647,50 +585,18 @@ class DockerComposeRoot(DockerBaseRunner):
 
 
         :param abort_on_container_exit: Stops all containers if any container
-           was stopped. Incompatible with -d
-           --always-recreate-deps      Recreate dependent containers.
-           Incompatible with --no-recreate.
-           --attach stringArray        Attach to service output.
-           --attach-dependencies       Attach to dependent containers.
-           --build                     Build images before starting containers.
         :param detach: Detached mode: Run containers in the
-           background
-           --exit-code-from string     Return the exit code of the selected
-           service container. Implies
-           --abort-on-container-exit
-           --force-recreate            Recreate containers even if their
-           configuration and image haven't changed.
-           --no-attach stringArray     Don't attach to specified service.
-           --no-build                  Don't build an image, even if it's missing.
-           --no-color                  Produce monochrome output.
-           --no-deps                   Don't start linked services.
-           --no-log-prefix             Don't print prefix in logs.
-           --no-recreate               If containers already exist, don't
-           recreate them. Incompatible with
-           --force-recreate.
-           --no-start                  Don't start the services after creating
-           them.
-           --pull string               Pull image before running
-           ("always"|"missing"|"never") (default
-           "missing")
-           --quiet-pull                Pull without printing progress information.
-           --remove-orphans            Remove containers for services not
-           defined in the Compose file.
+        :param exit_code_from: Return the exit code of the selected
+        :param abort_on_container_exit:
+        :param force_recreate: Recreate containers even if their
+        :param no_recreate: If containers already exist, don't
+        :param no_start: Don't start the services after creating
+        :param pull: Pull image before running
+        :param remove_orphans: Remove containers for services not
         :param renew_anon_volumes: Recreate anonymous volumes instead of
-           retrieving data from the previous
-           containers.
-           --scale scale               Scale SERVICE to NUM instances.
-           Overrides the scale setting in the
-           Compose file if present.
-           --timestamps                Show timestamps.
-           --wait                      Wait for services to be
-           running|healthy. Implies detached mode.
-           --wait-timeout int          timeout waiting for application to be
-           running|healthy.
+        :param wait: Wait for services to be
+        :param wait_timeout: timeout waiting for application to be
         :param waitTimeout: Use this waitTimeout in seconds for
-           container shutdown when attached or
-           when containers are already running.
-           (default 10)
         """
         runner = docker_composer_v2.runner.cmd.up.DockerComposeUp(
             **{k: v for k, v in locals().items() if k != "self"}
@@ -699,7 +605,7 @@ class DockerComposeRoot(DockerBaseRunner):
         return runner
 
     def version(
-        self, format: Optional[str] = None
+        self,
     ) -> docker_composer_v2.runner.cmd.version.DockerComposeVersion:
         """
 
@@ -708,9 +614,7 @@ class DockerComposeRoot(DockerBaseRunner):
         Show the Docker Compose version information
 
 
-        :param format: Format the output. Values: [pretty | json].
-           (Default: pretty)
-           --short           Shows only Compose's version number.
+
         """
         runner = docker_composer_v2.runner.cmd.version.DockerComposeVersion(
             **{k: v for k, v in locals().items() if k != "self"}
