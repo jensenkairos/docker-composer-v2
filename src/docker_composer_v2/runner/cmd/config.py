@@ -18,14 +18,42 @@ class DockerComposeConfig(DockerBaseRunner):
 
     """
 
+    format: Optional[str] = None
+    """Format the output. Values: [yaml | json]
+       (default "yaml")"""
+    hash: Optional[str] = None
+    """Print the service config hash, one per line."""
+    images: Optional[bool] = None
+    """Print the image names, one per line."""
     no_consistency: Optional[bool] = None
-    """Don't check model consistency - warning:"""
+    """Don't check model consistency - warning:
+       may produce invalid Compose output"""
+    no_interpolate: Optional[bool] = None
+    """Don't interpolate environment variables."""
+    no_normalize: Optional[bool] = None
+    """Don't normalize compose model."""
     output: Optional[str] = None
     """Save to file (default to stdout)"""
+    profiles: Optional[bool] = None
+    """Print the profile names, one per line."""
     quiet: Optional[bool] = None
-    """Only validate the configuration, don't"""
+    """Only validate the configuration, don't
+       print anything."""
+    resolve_image_digests: Optional[bool] = None
+    """Pin image tags to digests."""
+    services: Optional[bool] = None
+    """Print the service names, one per line."""
+    volumes: Optional[bool] = None
+    """Print the volume names, one per line."""
     _cmd: str = "config"
     _options: List[str] = [
+        "images",
         "no_consistency",
+        "no_interpolate",
+        "no_normalize",
+        "profiles",
         "quiet",
+        "resolve_image_digests",
+        "services",
+        "volumes",
     ]

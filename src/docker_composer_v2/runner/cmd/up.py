@@ -19,40 +19,91 @@ class DockerComposeUp(DockerBaseRunner):
     """
 
     abort_on_container_exit: Optional[bool] = None
-    """Stops all containers if any container"""
+    """Stops all containers if any container
+       was stopped. Incompatible with -d"""
+    always_recreate_deps: Optional[bool] = None
+    """Recreate dependent containers.
+       Incompatible with --no-recreate."""
+    attach: Optional[str] = None
+    """Attach to service output."""
+    attach_dependencies: Optional[bool] = None
+    """Attach to dependent containers."""
+    build: Optional[bool] = None
+    """Build images before starting containers."""
     detach: Optional[bool] = None
-    """Detached mode: Run containers in the"""
+    """Detached mode: Run containers in the
+       background"""
     exit_code_from: Optional[str] = None
-    """Return the exit code of the selected"""
-    abort_on_container_exit: Optional[bool] = None
-    """"""
+    """Return the exit code of the selected
+       service container. Implies
+       --abort-on-container-exit"""
     force_recreate: Optional[bool] = None
-    """Recreate containers even if their"""
+    """Recreate containers even if their
+       configuration and image haven't changed."""
+    no_attach: Optional[str] = None
+    """Don't attach to specified service."""
+    no_build: Optional[bool] = None
+    """Don't build an image, even if it's missing."""
+    no_color: Optional[bool] = None
+    """Produce monochrome output."""
+    no_deps: Optional[bool] = None
+    """Don't start linked services."""
+    no_log_prefix: Optional[bool] = None
+    """Don't print prefix in logs."""
     no_recreate: Optional[bool] = None
-    """If containers already exist, don't"""
+    """If containers already exist, don't
+       recreate them. Incompatible with
+       --force-recreate."""
     no_start: Optional[bool] = None
-    """Don't start the services after creating"""
+    """Don't start the services after creating
+       them."""
     pull: Optional[str] = None
-    """Pull image before running"""
+    """Pull image before running
+       ("always"|"missing"|"never") (default
+       "missing")"""
+    quiet_pull: Optional[bool] = None
+    """Pull without printing progress information."""
     remove_orphans: Optional[bool] = None
-    """Remove containers for services not"""
+    """Remove containers for services not
+       defined in the Compose file."""
     renew_anon_volumes: Optional[bool] = None
-    """Recreate anonymous volumes instead of"""
+    """Recreate anonymous volumes instead of
+       retrieving data from the previous
+       containers."""
+    scale: Optional[str] = None
+    """Scale SERVICE to NUM instances.
+       Overrides the scale setting in the
+       Compose file if present."""
+    timestamps: Optional[bool] = None
+    """Show timestamps."""
     wait: Optional[bool] = None
-    """Wait for services to be"""
+    """Wait for services to be
+       running|healthy. Implies detached mode."""
     wait_timeout: Optional[int] = None
-    """timeout waiting for application to be"""
+    """timeout waiting for application to be
+       running|healthy."""
     waitTimeout: Optional[int] = None
-    """Use this waitTimeout in seconds for"""
+    """Use this waitTimeout in seconds for
+       container shutdown when attached or
+       when containers are already running.
+       (default 10)"""
     _cmd: str = "up"
     _options: List[str] = [
         "abort_on_container_exit",
+        "always_recreate_deps",
+        "attach_dependencies",
+        "build",
         "detach",
-        "abort_on_container_exit",
         "force_recreate",
+        "no_build",
+        "no_color",
+        "no_deps",
+        "no_log_prefix",
         "no_recreate",
         "no_start",
+        "quiet_pull",
         "remove_orphans",
         "renew_anon_volumes",
+        "timestamps",
         "wait",
     ]

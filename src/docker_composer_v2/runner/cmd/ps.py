@@ -19,13 +19,22 @@ class DockerComposePs(DockerBaseRunner):
     """
 
     all: Optional[bool] = None
-    """Show all stopped containers (including those"""
+    """Show all stopped containers (including those
+       created by the run command)"""
     filter: Optional[str] = None
-    """Filter services by a property (supported"""
+    """Filter services by a property (supported
+       filters: status)."""
+    format: Optional[str] = None
+    """Format the output. Values: [table | json]
+       (default "table")"""
     quiet: Optional[bool] = None
     """Only display IDs"""
     services: Optional[bool] = None
     """Display services"""
+    status: Optional[str] = None
+    """Filter services by status. Values: [paused |
+       restarting | removing | running | dead |
+       created | exited]"""
     _cmd: str = "ps"
     _options: List[str] = [
         "all",

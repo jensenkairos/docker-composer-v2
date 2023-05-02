@@ -24,7 +24,8 @@ class DockerComposeCp(DockerBaseRunner):
     follow_link: Optional[bool] = None
     """Always follow symbol link in SRC_PATH"""
     index: Optional[int] = None
-    """Index of the container if there are multiple"""
+    """Index of the container if there are multiple
+       instances of a service ."""
     _cmd: str = "cp"
     _options: List[str] = [
         "archive",

@@ -19,7 +19,8 @@ class DockerComposePort(DockerBaseRunner):
     """
 
     index: Optional[int] = None
-    """index of the container if service has multiple"""
+    """index of the container if service has multiple
+       replicas (default 1)"""
     protocol: Optional[str] = None
     """tcp or udp (default "tcp")"""
     _cmd: str = "port"

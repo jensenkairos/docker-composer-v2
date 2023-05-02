@@ -19,7 +19,10 @@ class DockerComposeKill(DockerBaseRunner):
     """
 
     remove_orphans: Optional[bool] = None
-    """Remove containers for services not defined in"""
+    """Remove containers for services not defined in
+       the Compose file."""
+    signal: Optional[str] = None
+    """SIGNAL to send to the container. (default "SIGKILL")"""
     _cmd: str = "kill"
     _options: List[str] = [
         "remove_orphans",

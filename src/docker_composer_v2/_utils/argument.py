@@ -53,7 +53,7 @@ class Argument:
         if "  " in line:
             return _from_line_has_sep(line)
 
-        logger.info("line: " + line)
+        logger.info("from_line: " + line)
         words = iter(line.split())
         has_more = True
         while has_more:
@@ -74,21 +74,19 @@ class Argument:
 
 
 def _collect_arguments(arguments: Iterable[str]) -> Iterator[str]:
-    """Combine argument lines to obtain one line per argument"""
+    """
+    Combine argument lines to obtain one line per argument
+        -d, --detach               Detached mode: Run containers in the background,
+        --no-color                 Produce monochrome output.
+    """
     res = ""
     for arg in arguments:
-        # logger.info("arg.strip(): ", arg)
-        # if res and arg[:6].strip().startswith("-"):
-        if arg.strip() and len(arg) >= 6 and arg.strip().startswith("-"):
-            yield arg.strip()
+        logger.info("arg.strip(): " + arg)
+        if res and arg[:10].strip().startswith("-"):
+            logger.info("single parsed line: " + res.strip())
+            yield res.strip()
             res = ""
-        else:
-            continue
-        # res += f"\n   {arg.strip()}"
-        # res = f"   {arg.strip()}"
-        # if arg.strip():
-        #     yield arg.strip()
-        #     res = ""
+        res += f"\n   {arg.strip()}"
     if res:
         yield res.strip()
 
@@ -99,8 +97,9 @@ def parse_dc_argument(lines: List[str]) -> List[Argument]:
     :param lines: Lines of the Options sections from `docker compose --help`.
     :return: List of arguments
     """
+    logger.info("parse dc argument lines: " + str(lines))
     iter_lines = _collect_arguments(lines)
-    return [Argument.from_line(line) for line in iter_lines if "--version" not in line and "." not in line]
+    return [Argument.from_line(line) for line in iter_lines if "--version" not in line]
 
 
 def _get_type(type_name) -> Type:

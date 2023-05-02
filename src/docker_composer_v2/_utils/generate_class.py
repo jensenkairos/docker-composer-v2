@@ -11,8 +11,7 @@ import isort
 from isort.exceptions import ISortError
 from loguru import logger
 
-import argument
-from argument import Argument
+from docker_composer_v2._utils.argument import Argument, parse_dc_argument
 from docker_composer_v2.base import check_v2
 
 
@@ -73,7 +72,9 @@ def collect_help_lines(msg: str) -> Mapping[str, List[str]]:
 def parse_help(msg: str) -> Tuple[Mapping[str, List[str]], List[Argument]]:
     """Helper function, get sections and arguments from docker-compose <cmd> --help text"""
     sections = collect_help_lines(msg)
-    arguments = argument.parse_dc_argument(sections["options"])
+    logger.info('sections["options"]' + str(sections["options"]))
+    arguments = parse_dc_argument(sections["options"])
+    logger.info("parsed arguments: " + str(arguments))
     return sections, arguments
 
 

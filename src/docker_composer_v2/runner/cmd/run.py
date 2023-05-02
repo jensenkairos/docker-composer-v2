@@ -18,34 +18,56 @@ class DockerComposeRun(DockerBaseRunner):
 
     """
 
+    build: Optional[bool] = None
+    """Build image before starting container."""
     detach: Optional[bool] = None
-    """Run container in background and print"""
+    """Run container in background and print
+       container ID"""
     entrypoint: Optional[str] = None
     """Override the entrypoint of the image"""
     env: Optional[str] = None
     """Set environment variables"""
+    interactive: Optional[bool] = None
+    """Keep STDIN open even if not attached.
+       (default true)"""
     label: Optional[str] = None
     """Add or override a label"""
     name: Optional[str] = None
     """Assign a name to the container"""
     no_TTY: Optional[bool] = None
-    """Disable pseudo-TTY allocation (default:"""
+    """Disable pseudo-TTY allocation (default:
+       auto-detected). (default true)"""
+    no_deps: Optional[bool] = None
+    """Don't start linked services."""
+    publish: Optional[str] = None
+    """Publish a container's port(s) to the host."""
+    quiet_pull: Optional[bool] = None
+    """Pull without printing progress information."""
     remove_orphans: Optional[bool] = None
-    """Remove containers for services not defined"""
+    """Remove containers for services not defined
+       in the Compose file."""
     rm: Optional[bool] = None
     """Automatically remove the container when it exits"""
     service_ports: Optional[bool] = None
-    """Run command with the service's ports"""
+    """Run command with the service's ports
+       enabled and mapped to the host."""
     use_aliases: Optional[bool] = None
-    """Use the service's network useAliases in the"""
+    """Use the service's network useAliases in the
+       network(s) the container connects to."""
     user: Optional[str] = None
     """Run as specified username or uid"""
+    volume: Optional[str] = None
+    """Bind mount a volume."""
     workdir: Optional[str] = None
     """Working directory inside the container"""
     _cmd: str = "run"
     _options: List[str] = [
+        "build",
         "detach",
+        "interactive",
         "no_TTY",
+        "no_deps",
+        "quiet_pull",
         "remove_orphans",
         "rm",
         "service_ports",

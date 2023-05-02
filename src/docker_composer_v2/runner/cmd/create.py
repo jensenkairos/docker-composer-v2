@@ -18,17 +18,30 @@ class DockerComposeCreate(DockerBaseRunner):
 
     """
 
+    build: Optional[bool] = None
+    """Build images before starting containers."""
     force_recreate: Optional[bool] = None
-    """Recreate containers even if their configuration"""
+    """Recreate containers even if their configuration
+       and image haven't changed."""
+    no_build: Optional[bool] = None
+    """Don't build an image, even if it's missing."""
     no_recreate: Optional[bool] = None
-    """If containers already exist, don't recreate"""
+    """If containers already exist, don't recreate
+       them. Incompatible with --force-recreate."""
     pull: Optional[str] = None
-    """Pull image before running"""
+    """Pull image before running
+       ("always"|"missing"|"never") (default "missing")"""
     remove_orphans: Optional[bool] = None
-    """Remove containers for services not defined in"""
+    """Remove containers for services not defined in
+       the Compose file."""
+    scale: Optional[str] = None
+    """Scale SERVICE to NUM instances. Overrides the
+       scale setting in the Compose file if present."""
     _cmd: str = "create"
     _options: List[str] = [
+        "build",
         "force_recreate",
+        "no_build",
         "no_recreate",
         "remove_orphans",
     ]

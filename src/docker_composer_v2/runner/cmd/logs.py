@@ -18,7 +18,29 @@ class DockerComposeLogs(DockerBaseRunner):
 
     """
 
+    follow: Optional[bool] = None
+    """Follow log output."""
+    no_color: Optional[bool] = None
+    """Produce monochrome output."""
+    no_log_prefix: Optional[bool] = None
+    """Don't print prefix in logs."""
+    since: Optional[str] = None
+    """Show logs since timestamp (e.g.
+       2013-01-02T13:23:37Z) or relative (e.g. 42m for
+       42 minutes)"""
     tail: Optional[str] = None
-    """Number of lines to show from the end of the logs"""
+    """Number of lines to show from the end of the logs
+       for each container. (default "all")"""
+    timestamps: Optional[bool] = None
+    """Show timestamps."""
+    until: Optional[str] = None
+    """Show logs before a timestamp (e.g.
+       2013-01-02T13:23:37Z) or relative (e.g. 42m for
+       42 minutes)"""
     _cmd: str = "logs"
-    _options: List[str] = []
+    _options: List[str] = [
+        "follow",
+        "no_color",
+        "no_log_prefix",
+        "timestamps",
+    ]

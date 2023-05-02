@@ -19,14 +19,27 @@ class DockerComposeExec(DockerBaseRunner):
     """
 
     detach: Optional[bool] = None
-    """Detached mode: Run command in the"""
+    """Detached mode: Run command in the
+       background."""
     env: Optional[str] = None
     """Set environment variables"""
     index: Optional[int] = None
-    """index of the container if there are"""
+    """index of the container if there are
+       multiple instances of a service
+       [default: 1]. (default 1)"""
+    no_TTY: Optional[str] = None
+    """Disable pseudo-TTY allocation. By
+       default docker compose exec
+       allocates a TTY. (default true)"""
+    privileged: Optional[bool] = None
+    """Give extended privileges to the process."""
+    user: Optional[str] = None
+    """Run the command as this user."""
     workdir: Optional[str] = None
-    """Path to workdir directory for this"""
+    """Path to workdir directory for this
+       command."""
     _cmd: str = "exec"
     _options: List[str] = [
         "detach",
+        "privileged",
     ]

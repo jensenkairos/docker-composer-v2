@@ -18,19 +18,28 @@ class DockerComposeBuild(DockerBaseRunner):
 
     """
 
+    build_arg: Optional[str] = None
+    """Set build-time variables for services."""
     no_cache: Optional[bool] = None
     """Do not use cache when building the image"""
     progress: Optional[str] = None
-    """Set type of progress output (auto, tty,"""
+    """Set type of progress output (auto, tty,
+       plain, quiet) (default "auto")"""
     pull: Optional[bool] = None
-    """Always attempt to pull a newer version of"""
+    """Always attempt to pull a newer version of
+       the image."""
+    push: Optional[bool] = None
+    """Push service images."""
     quiet: Optional[bool] = None
     """Don't print anything to STDOUT"""
     ssh: Optional[str] = None
-    """Set SSH authentications used when"""
+    """Set SSH authentications used when
+       building service images. (use 'default'
+       for using your default SSH Agent)"""
     _cmd: str = "build"
     _options: List[str] = [
         "no_cache",
         "pull",
+        "push",
         "quiet",
     ]

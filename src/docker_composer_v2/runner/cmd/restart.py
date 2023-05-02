@@ -18,7 +18,11 @@ class DockerComposeRestart(DockerBaseRunner):
 
     """
 
+    no_deps: Optional[bool] = None
+    """Don't restart dependent services."""
     timeout: Optional[int] = None
     """Specify a shutdown timeout in seconds (default 10)"""
     _cmd: str = "restart"
-    _options: List[str] = []
+    _options: List[str] = [
+        "no_deps",
+    ]

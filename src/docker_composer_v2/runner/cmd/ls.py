@@ -20,7 +20,15 @@ class DockerComposeLs(DockerBaseRunner):
 
     all: Optional[bool] = None
     """Show all stopped Compose projects"""
+    filter: Optional[str] = None
+    """Filter output based on conditions provided."""
+    format: Optional[str] = None
+    """Format the output. Values: [table | json].
+       (default "table")"""
+    quiet: Optional[bool] = None
+    """Only display IDs."""
     _cmd: str = "ls"
     _options: List[str] = [
         "all",
+        "quiet",
     ]

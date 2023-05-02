@@ -18,5 +18,12 @@ class DockerComposeVersion(DockerBaseRunner):
 
     """
 
+    format: Optional[str] = None
+    """Format the output. Values: [pretty | json].
+       (Default: pretty)"""
+    short: Optional[bool] = None
+    """Shows only Compose's version number."""
     _cmd: str = "version"
-    _options: List[str] = []
+    _options: List[str] = [
+        "short",
+    ]
